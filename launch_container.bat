@@ -9,6 +9,15 @@ if "%1"=="clean" (
     exit /b
 )
 
-docker build -t %IMAGE_NAME% .devcontainer
+REM Check if image exists
+set IMAGE_ID=
+for /f "delims=" %%i in ('docker images -q %IMAGE_NAME%') do set IMAGE_ID=%%i
+
+if defined IMAGE_ID (
+    REM Image exists, skip build and message
+) else (
+    echo Building Docker image %IMAGE_NAME% ...
+    docker build -t %IMAGE_NAME% .devcontainer
+)
 
 docker run --rm -it --name %CONTAINER_NAME% -v "%cd%:/sudoku" %IMAGE_NAME%
