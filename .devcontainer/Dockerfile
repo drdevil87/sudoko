@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
-WORKDIR /sudoko
+WORKDIR /sudoku
 
 # Default command
 CMD ["bash"]
