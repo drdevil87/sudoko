@@ -20,4 +20,4 @@ if defined IMAGE_ID (
     docker build -t %IMAGE_NAME% .devcontainer
 )
 
-docker run --rm -it --name %CONTAINER_NAME% -v "%cd%:/sudoku" %IMAGE_NAME%
+docker run --rm -it --name %CONTAINER_NAME% -v "%cd%:/sudoku" %IMAGE_NAME% bash -c "sed -i 's/\r$//' /sudoku/build_and_run.sh; exec bash"
