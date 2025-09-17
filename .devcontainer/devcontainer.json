@@ -1,0 +1,14 @@
+{
+  "name": "Ubuntu 24 C++ Sudoku Solver",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": ["ms-vscode.cpptools"]
+    }
+  },
+  "workspaceFolder": "/sudoko",
+  "remoteUser": "vscode"
+}
