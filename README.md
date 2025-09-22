@@ -47,10 +47,11 @@ The provided C++ solver uses a **backtracking algorithm** to solve Sudoku puzzle
 This approach is efficient for standard Sudoku puzzles and guarantees a solution if one exists.
 
 ## Files
-- `.devcontainer/Dockerfile`: Ubuntu 24.04 with GCC, g++, cmake
+- `.devcontainer/Dockerfile`: Ubuntu 24.04 with GCC, g++
 - `.devcontainer/devcontainer.json`: Dev Container configuration
 - `sudoku_solver.cpp`: Example C++ Sudoku solver
 
 ## Requirements
 - [VS Code](https://code.visualstudio.com/)
 - [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
