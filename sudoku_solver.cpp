@@ -95,8 +95,10 @@ int main(int argc, char* argv[]) {
 
     vector<vector<int>> grid;
     if (argc > 1) {
+        cout << "Reading puzzle from file: " << argv[1] << endl;
         grid = readGridFromFile(argv[1]);
     } else {
+        cout << "No input file provided. Using default puzzle." << endl;
         grid = {
             {3, 0, 6, 5, 0, 8, 4, 0, 0},
             {5, 2, 0, 0, 0, 0, 0, 0, 0},
@@ -110,6 +112,7 @@ int main(int argc, char* argv[]) {
         };
     }
     if (solveSudoku(grid, 0, 0)) {
+        cout << "Solved Sudoku:" << endl;
         printGrid(grid);
     } else {
         cout << "No solution exists" << endl;
