@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <csdtint>
 using namespace std;
 
 #define N 9
