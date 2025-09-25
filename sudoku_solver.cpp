@@ -7,19 +7,19 @@ using namespace std;
 
 #define N 9
 
-bool isSafe(const vector<vector<int>>& grid, int row, int col, int num) {
+bool isSafe(const vector<vector<uint8_t>>& grid, const uint8_t &row, const uint8_t& col, const uint8_t& num) {
     // Check row and column in a single loop
-    for (int x = 0; x < N; x++) {
+    for (uint8_t x = 0; x < N; x++) {
         if (grid[row][x] == num || grid[x][col] == num) {
             return false;
         }
     }
 
     // Check 3x3 subgrid
-    int startRow = (row / 3) * 3;
-    int startCol = (col / 3) * 3;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+    const uint8_t startRow = (row / 3) * 3;
+    const uint8_t startCol = (col / 3) * 3;
+    for (uint8_t i = 0; i < 3; i++) {
+        for (uint8_t j = 0; j < 3; j++) {
             if (grid[startRow + i][startCol + j] == num) {
                 return false;
             }
@@ -29,29 +29,25 @@ bool isSafe(const vector<vector<int>>& grid, int row, int col, int num) {
     return true;
 }
 
-bool findEmptyCell(const vector<vector<int>>& grid, int& row, int& col) {
-    for (row = 0; row < N; row++) {
-        for (col = 0; col < N; col++) {
-            if (grid[row][col] == 0) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-bool solveSudoku(vector<vector<int>>& grid) {
-    int row, col;
-
-    // If no empty cell is found, puzzle is solved
-    if (!findEmptyCell(grid, row, col)) {
+bool solveSudoku(vector<vector<uint8_t>>& grid, const uint8_t& pos) {
+    // Base case: if we've filled all 81 cells (0-80), puzzle is solved
+    if (pos == N * N) {
         return true;
     }
 
-    for (int num = 1; num <= N; num++) {
+    const uint8_t row = pos / N;
+    const uint8_t col = pos % N;
+
+    // If current cell is already filled, move to next cell
+    if (grid[row][col] != 0) {
+        return solveSudoku(grid, pos + 1);
+    }
+
+    // Try numbers 1-9 for empty cell
+    for (uint8_t num = 1; num <= N; num++) {
         if (isSafe(grid, row, col, num)) {
             grid[row][col] = num;
-            if (solveSudoku(grid)) {
+            if (solveSudoku(grid, pos + 1)) {
                 return true;
             }
             grid[row][col] = 0; // Backtrack only when recursive call fails
@@ -61,17 +57,33 @@ bool solveSudoku(vector<vector<int>>& grid) {
     return false;
 }
 
-void printGrid(const vector<vector<int>>& grid) {
-    for (int r = 0; r < N; r++) {
-        for (int d = 0; d < N; d++) {
-            cout << grid[r][d] << " ";
+// Wrapper function for easier calling
+bool solveSudoku(vector<vector<uint8_t>>& grid) {
+    return solveSudoku(grid, 0);
+}
+
+bool hasEmptyCell(const vector<vector<uint8_t>>& grid) {
+    for (uint8_t row = 0; row < N; row++) {
+        for (uint8_t col = 0; col < N; col++) {
+            if (grid[row][col] == 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void printGrid(const vector<vector<uint8_t>>& grid) {
+    for (uint8_t r = 0; r < N; r++) {
+        for (uint8_t d = 0; d < N; d++) {
+            cout << (int)grid[r][d] << " ";
         }
         cout << endl;
     }
 }
 
-vector<vector<int>> readGridFromFile(const string& filename) {
-    vector<vector<int>> grid(N, vector<int>(N, 0));
+vector<vector<uint8_t>> readGridFromFile(const string& filename) {
+    vector<vector<uint8_t>> grid(N, vector<uint8_t>(N, 0));
     ifstream infile(filename);
     if (!infile.is_open()) {
         cerr << "Error: Could not open file " << filename << endl;
@@ -79,13 +91,13 @@ vector<vector<int>> readGridFromFile(const string& filename) {
     }
 
     string line;
-    int row = 0;
+    uint8_t row = 0;
     while (getline(infile, line) && row < N) {
         stringstream ss(line);
-        for (int col = 0; col < N; col++) {
+        for (uint8_t col = 0; col < N; col++) {
             int val;
             if (ss >> val) {
-                grid[row][col] = val;
+                grid[row][col] = (uint8_t)val;
             }
         }
         row++;
@@ -107,7 +119,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    vector<vector<int>> grid;
+    vector<vector<uint8_t>> grid;
     if (argc > 1) {
         cout << "Reading puzzle from file: " << argv[1] << endl;
         grid = readGridFromFile(argv[1]);
@@ -125,6 +137,13 @@ int main(int argc, char* argv[]) {
             {0, 0, 5, 2, 0, 6, 3, 0, 0}
         };
     }
+    // If no empty cell is found, puzzle is solved
+    if (!hasEmptyCell(grid)) {
+        cout << "The puzzle is already solved." << endl;
+        printGrid(grid);
+        return 0;
+    }
+
     if (solveSudoku(grid)) {
         cout << "Solved Sudoku:" << endl;
         printGrid(grid);
